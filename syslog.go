@@ -16,13 +16,16 @@ type SyslogTarget struct {
 	close  chan bool
 }
 
-func NewSyslogTarget(prefix string) (*SyslogTarget, error) {
-	w, err := syslog.New(syslog.LOG_CRIT, prefix)
+func NewSyslogTarget() *SyslogTarget {
+	w, err := syslog.New(syslog.LOG_CRIT, "")
+	if err != nil {
+		panic(err)
+	}
 	return &SyslogTarget{
 		Filter: &Filter{MaxLevel: LevelDebug},
 		Writer: w,
 		close:  make(chan bool, 0),
-	}, err
+	}
 }
 
 func (t *SyslogTarget) Open(io.Writer) error {
